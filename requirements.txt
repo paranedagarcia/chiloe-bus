@@ -1,0 +1,8 @@
+dateutils
+pandas
+pandas-profiling
+python-dotenv
+streamlit==1.33.0
+streamlit-card
+streamlit-extras
+
