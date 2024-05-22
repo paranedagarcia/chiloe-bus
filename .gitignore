@@ -1,2 +1,4 @@
 .streamlit/
-bus.db
+.vscode/
+.gitignore
+.venv/

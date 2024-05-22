@@ -8,6 +8,10 @@ dl {
     font-weight: 400;
 }
 
+h1 {
+    padding: 1rem 0px 1rem !important;
+}
+
 .st-emotion-cache-z5fcl4 {
     width: 100%;
     padding: 2rem 2rem 2rem !important;
@@ -15,7 +19,13 @@ dl {
     max-width: initial;
 }
 
-
+/* container inicio*/
+.st-emotion-cache-z5fcl4 {
+    width: 100%;
+    padding: 1rem 1rem 1rem !important;
+    min-width: auto;
+    max-width: initial;
+}
 
 .right {
     float: right;
@@ -35,4 +45,25 @@ dl {
 /* sidebar */
 .st-emotion-cache-16txtl3 {
     padding: 2.5rem 1.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+div img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* button center */
+div.row-widget.stButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* imagen chiloe at center */
+.st-emotion-cache-1kyxreq {
+    display: flex;
+    justify-content: center;
 }

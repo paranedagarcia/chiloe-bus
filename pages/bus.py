@@ -3,19 +3,26 @@ import os
 import streamlit as st
 import pandas as pd
 import sqlite3
+from funciones import menu_pages, production
 
 # configuration
 st.set_page_config(
-    page_title="Imagina-Planillas",
+    page_title="Chiloé buses",
     page_icon="🧊",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
+
+production()
 
 # styles
 with open('style/style.css') as f:
     css = f.read()
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
+
+# pages
+menu_pages()
 
 # sqlite connection
 # Connect to the SQLite database
@@ -35,42 +42,54 @@ dayweeks.sort()
 
 
 with st.sidebar:
-    st.write("Planifique su viaje en bus dentro de Chiloé")
-    # st.write("It's a good place to put widgets that control the main page")
     st.divider()
-    origin = st.selectbox("Origen/Origin",
-                          options=origins, index=None, key="origin", placeholder="Seleccione Origen/Origin", help="Seleccione Origen/origin")
-    if origin:
-        filtered_destinations = df[df['origin']
-                                   == origin]['destination'].unique()
-        filtered_destinations.sort()
-        destination = st.selectbox("Destino/Destination",
-                                   options=filtered_destinations, index=0, key="destination", placeholder="Seleccione Destino/Destination", help="Seleccione Destino/Destination")
+    # origin = st.selectbox("Origen/Origin",
+    #                       options=origins, index=2, key="origin", placeholder="Seleccione Origen/Origin")
+    # if origin:
+    #     filtered_destinations = df[df['origin']
+    #                                == origin]['destination'].unique()
+    #     filtered_destinations.sort()
+    #     destination = st.selectbox("Destino/Destination",
+    #                                options=filtered_destinations, index=0, key="destination", placeholder="Seleccione Destino/Destination")
 
-    # destination = st.selectbox("Destino/Destination",
-    #                            options=destinations, index=None, key="destination", placeholder="Seleccione Destino/Destination", help="Seleccione Destino/Destination")
-    dayweek = st.multiselect("Select Day of the week", options=dayweeks,
-                             key="dayweek", default=dayweeks)
+    # dayweek = st.multiselect("Día / Day", options=dayweeks,
+    #                          key="dayweek", default=dayweeks)
 
-    buslist = st.button("List Buses", type="primary")
+    # buslist = st.button("Rutas / Routes", type="primary")
 
 # main page
 st.subheader("Chiloé Bus")
 
+with st.expander("VIAJES / TRAVELS:"):
+    col1, col2 = st.columns(2, gap="small")
+    with col1:
+        origin = st.selectbox("Origen/Origin",
+                              options=origins, index=1, key="origin", placeholder="Seleccione Origen/Origin")
+    with col2:
+        if origin:
+            filtered_destinations = df[df['origin']
+                                       == origin]['destination'].unique()
+            filtered_destinations.sort()
+        destination = st.selectbox("Destino/Destination",
+                                   options=filtered_destinations, index=0, key="destination", placeholder="Seleccione Destino/Destination")
+    dayweek = st.multiselect("Día / Day", options=dayweeks,
+                             key="dayweek", default=dayweeks)
 
 if origin and destination and dayweek:
-    df.drop(['idbus', 'value'], axis=1, inplace=True)
+    df.drop(['idbus', 'value', 'arrival', 'contact'], axis=1, inplace=True)
     filtered_df = df[(df['origin'] == origin) & (
         df['destination'] == destination) & (df['dayweek'].isin(dayweek))]
     filtered_df.sort_values(by=['dayweek', 'departure'], inplace=True)
-    # rename the columns of the dataframe 'df'
+    # change content in column contact to a link with tel: protocol with the phone number of column contact
+    # filtered_df['contact'] = filtered_df['contact'].apply(
+    #   lambda x: f'<a href="tel:{x}">{x}</a>')
+
     filtered_df.rename(columns={'origin': 'Origen',
-                       'destination': 'Destino',
+                                'destination': 'Destino',
                                 'departure': 'Salida',
-                                'arrival': 'Llegada/',
                                 'dayweek': 'Día',
-                                # 'value': 'Valor',
-                                'contact': 'Contacto',
                                 'company': 'Compañía'}, inplace=True)
 
-    st.dataframe(filtered_df, height=550)
+    st.dataframe(filtered_df,
+                 height=550, hide_index=True,
+                 use_container_width=True)
